@@ -15,13 +15,15 @@
 # It should be a variation on the typical to-do app
 # That tracks both tasks/progress on tasks and uses a countdown timer.
 #
-# My goals for it are:
+# My remaining goals for it are:
 #
-# 1. Learn enough tkinter to create a GUI
-# 2. Create a data entry field that allows user to enter tasks and times
-# 3. Create a start/stop button that starts and stops the countdown timer 
-# 4. Measure and reward successes...maybe with inspirational cat photos?
+# 1. Create a data entry field that allows user to enter tasks and times 
+# 2. Measure and reward successes...maybe with inspirational cat photos?
+# 3. I should probably object-orient this for testing. Does VSC automate
+#    getters and setters?
+#
 
+import sys
 import time
 import playsound
 import tkinter as tk
@@ -40,7 +42,7 @@ def countdown_pop_up(mins):
                        command = root.destroy)
     button.pack()
     countdown(root, label, mins)
-    root.after(30, destroy)
+    root.after(15, root.destroy())
     root.mainloop()
     pass
 
@@ -72,9 +74,18 @@ def get_countdown_time():
     while not works:
         try:
             mins = float(mins)
-            works = True
+            if mins > 0:
+                works = True
+            else:
+                print("Please restart the program. " +
+                      "Ensure that you enter a value greater than 0")
+                works = False
+                break
         except:
-            print("Please enter numerical values only.")
+            print("Please restart the program. " +
+                  "Enter numerical values only.")
+            sys.exit(1)
+            break
     return mins 
 
 # Testing the timer logic
