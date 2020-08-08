@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 
+#
+# Updated: 2020-08-08
+#
+# Most recent changes: 
+#
+# Added GUI for countdown timer
+#
 # About this program:
 #
 # These are early development notes before I figure out exactly how to code this.
@@ -15,30 +22,63 @@
 # 3. Create a start/stop button that starts and stops the countdown timer 
 # 4. Measure and reward successes...maybe with inspirational cat photos?
 
-import time 
+import time
+import playsound
+import tkinter as tk
 
-def countdown(mins):
+def countdown_pop_up(mins):
+    '''creates gui for countdown'''
+    root = tk.Tk()
+    root.title = ("Countdown")
+    label = tk.Label(root, 
+                     fg = "green", 
+                     font = "Arial 32 bold")
+    label.pack()
+    button = tk.Button(root, 
+                       text = "Stop", 
+                       width = 25, 
+                       command = root.destroy)
+    button.pack()
+    countdown(root, label, mins)
+    root.after(30, destroy)
+    root.mainloop()
+    pass
+
+def countdown(root, label, mins):
+    '''countdown for pop-up'''
     i = mins * 60
-    while i > 0:
+    while i >= 0:
         minutes = i / 60
-        seconds = i % 60
-        print("%d:%02d" % (minutes, seconds))
+        seconds = round(i % 60, 0)
+        counter = "%d:%02d" % (minutes, seconds)
+        label.config(text = counter)
+        root.update()
         time.sleep(1)
         i -= 1
-    print("Time's up!")
+        if i == 0:
+            label.config(text = "0:00 Time is up!")
+            root.update()
+            playsound.playsound("alarm.mp3")
     pass
 
 def get_countdown_time():
-    print("Please enter the number of minutes that you would like to spend on this task. Enter whole numbers only: ")
-    count = input() 
-    while not count.isdigit():
-        print("Please enter integer values only.")
-        count = input()
-    count = int(count)
-    return count 
+    '''gets time on task from user'''
+    print("Please enter the number of minutes that you would like to spend on this task: ")
+    mins = input() 
+
+    works = False
+
+    # ensuring valid numerical floating-point value:
+    while not works:
+        try:
+            mins = float(mins)
+            works = True
+        except:
+            print("Please enter numerical values only.")
+    return mins 
 
 # Testing the timer logic
-countdown(get_countdown_time())
+countdown_pop_up(get_countdown_time())
 
 # Next steps:
 #
