@@ -28,6 +28,25 @@ import time
 import playsound
 import tkinter as tk
 
+# Class to store tasks
+class Task():
+    def __init__(self, taskname, time):
+        self.taskname = taskname
+        self.time = time
+
+    def __str__(self):
+        return "Task: {}; Time: {} minutes".format(self.taskname, self.time)
+
+
+def add_task(tasklist):
+    print("Please enter the name of your task: ")
+    task_name = input()
+    task_time = get_countdown_time(task_name)
+    new_task = Task(task_name, task_time) 
+    tasklist += [new_task]
+    return tasklist
+    
+
 def countdown_pop_up(mins):
     '''creates gui for countdown'''
     root = tk.Tk()
@@ -42,7 +61,6 @@ def countdown_pop_up(mins):
                        command = root.destroy)
     button.pack()
     countdown(root, label, mins)
-    root.after(15, root.destroy())
     root.mainloop()
     pass
 
@@ -58,14 +76,14 @@ def countdown(root, label, mins):
         time.sleep(1)
         i -= 1
         if i == 0:
-            label.config(text = "0:00 Time is up!")
+            label.config(text = "0:00 \nTime is up!")
             root.update()
             playsound.playsound("alarm.mp3")
     pass
 
-def get_countdown_time():
+def get_countdown_time(task):
     '''gets time on task from user'''
-    print("Please enter the number of minutes that you would like to spend on this task: ")
+    print("Please enter the number of minutes that you would like to spend on {}: ".format(task))
     mins = input() 
 
     works = False
@@ -88,12 +106,33 @@ def get_countdown_time():
             break
     return mins 
 
-# Testing the timer logic
-countdown_pop_up(get_countdown_time())
 
-# Next steps:
 #
-# 1. Create a task object class that defines task objects and assigns object names and times as attributes
-# 1a. The functions above may be the getters/setters for the time attribute
-# 2. Ask user to enter names of tasks and times. 
-# 3. Save objects to a list and call on them one at a time.
+#
+# Here's the start of our main method
+#
+#
+
+cont_task = True
+affirmatives = ['yes', 'yeah', 'y', 'yes, please', 'yes please', 'ok', 'sure',
+                'affirmative', 'yup', 'duh', 'of course', 'i guess', 'true',
+                'for sure', 'fo sho', 'guess so', 'yeet', 'word', 'k', 'aight',
+                'alright', 'indeed', 'mmhmm', 'mm-hmm', 'yep', 'yeppers']
+
+tasklist = []
+
+# Loops for as many tasks as the user wants to enter
+
+while cont_task:
+    add_task(tasklist)
+    cont = input("Would you like to add another task (y/n)? ")
+    if cont.lower() not in affirmatives:
+        print("Ok, last task has been entered.")
+        cont_task = False
+
+# Loops through the tasklist and times each one 
+
+for task in tasklist:
+    print("Now working on {}.".format(task.taskname))
+    countdown_pop_up(task.time)
+
