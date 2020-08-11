@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 #
-# Updated: 2020-08-08
+# Updated: 2020-08-10
 #
 # Most recent changes: 
 #
+# Added getters and setters
 # Added GUI for countdown timer
 #
 # About this program:
@@ -19,8 +20,6 @@
 #
 # 1. Create a data entry field that allows user to enter tasks and times 
 # 2. Measure and reward successes...maybe with inspirational cat photos?
-# 3. I should probably object-orient this for testing. Does VSC automate
-#    getters and setters?
 #
 
 import sys
@@ -34,8 +33,20 @@ class Task():
         self.taskname = taskname
         self.time = time
 
-    def __str__(self):
-        return "Task: {}; Time: {} minutes".format(self.taskname, self.time)
+    def get_taskname(self):
+        return self.taskname 
+    
+    def get_time(self):
+        return self.time
+    
+    def set_taskname(self):
+        return self.taskname
+    
+    def set_time(self):
+        return self.time
+
+
+    
 
 
 def add_task(tasklist):
@@ -61,6 +72,7 @@ def countdown_pop_up(mins):
                        command = root.destroy)
     button.pack()
     countdown(root, label, mins)
+    root.destroy()
     root.mainloop()
     pass
 
@@ -133,6 +145,6 @@ while cont_task:
 # Loops through the tasklist and times each one 
 
 for task in tasklist:
-    print("Now working on {}.".format(task.taskname))
-    countdown_pop_up(task.time)
+    print("Now working on {}.".format(task.get_taskname()))
+    countdown_pop_up(task.get_time())
 
